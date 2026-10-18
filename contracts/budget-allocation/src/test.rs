@@ -21,6 +21,17 @@ mod tests {
         let _ = soroban_sdk::Address::generate(&env);
     }
     #[test]
+    fn get_value_returns_zero_after_initialize() {
+        use crate::{Contract, ContractClient};
+        let env = Env::default();
+        env.mock_all_auths();
+        let contract_id = env.register(Contract, ());
+        let client = ContractClient::new(&env, &contract_id);
+        let admin = soroban_sdk::Address::generate(&env);
+        client.initialize(&admin);
+        assert_eq!(client.get_value(), 0);
+    }
+    #[test]
     fn zero_boundary() {
         assert_eq!(0_i128.checked_add(0), Some(0));
     }
